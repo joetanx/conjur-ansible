@@ -21,6 +21,3 @@
 - !grant
   role: !group ssh_keys/consumers
   member: !layer ansible
-- !grant
-  role: !group world_db/consumers
-  member: !layer ansible
