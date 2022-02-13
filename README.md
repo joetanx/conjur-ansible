@@ -41,7 +41,6 @@ echo -e "Cyberark1\nCyberark1" | (passwd ansible)
 - Generate ssh key pair and set to `authorized_keys`
 ```console
 su - ansible
-rm -rf .ssh
 mkdir ~/.ssh
 ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -q -N ""
 cat /home/ansible/.ssh/id_rsa.pub > /home/ansible/.ssh/authorized_keys
@@ -53,6 +52,10 @@ chmod 600 .ssh/authorized_keys
 curl -L -o conjur-cli-rhel-8.tar.gz https://github.com/cyberark/conjur-api-python3/releases/download/v7.1.0/conjur-cli-rhel-8.tar.gz
 tar xvf conjur-cli-rhel-8.tar.gz
 mv conjur /usr/local/bin/
+```
+- Clean-up
+```console
+rm -f conjur-cli-rhel-8.tar.gz
 ```
 -  Initialize Conjur CLI and login to conjur
 ```console
