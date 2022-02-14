@@ -1,3 +1,7 @@
+# Introduction
+- This guide demonstrates how Ansible Core can retrieve credentials from Conjur.
+- The integration between Ansible and Conjur is established using the Ansible role for Conjur: https://galaxy.ansible.com/cyberark/conjur.
+- The demonstration will retrieve the credentials from Conjur to connect to the managed node and perform a simple `ping` task.
 ### Software Versions
 - RHEL 8.5
 - Ansible Core 2.12
