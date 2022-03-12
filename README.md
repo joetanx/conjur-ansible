@@ -3,11 +3,14 @@
 - This guide demonstrates how Ansible Core can retrieve credentials from Conjur.
 - The integration between Ansible and Conjur is established using the Ansible role for Conjur: <https://galaxy.ansible.com/cyberark/conjur>.
 - The demonstration will retrieve the credentials from Conjur to connect to the managed node and perform a simple `ping` task.
+
 ### Software Versions
 - RHEL 8.5
 - Ansible Core 2.12
 - Conjur 12.4
+
 ### Servers
+
 | Hostname  | Role |
 | --- | --- |
 | conjur.vx  | Conjur master, Ansible control node  |
@@ -15,11 +18,13 @@
 
 # 1. Setup Conjur master
 - Setup Conjur master according to this guide: <https://joetanx.github.io/conjur-master>
+
 # 2. Install Ansible control node
 ```console
 yum -y install python39-pip
 pip3 install ansible
 ```
+
 # 3. Setup Conjur policy
 - Load the Conjur policy `ansible-vars.yaml`
   - Creates the policy `ssh_keys`
@@ -36,6 +41,7 @@ conjur policy load -b root -f ansible-vars.yaml
 ```console
 rm -f ansible-vars.yaml
 ```
+
 # 4. Prepare Ansible user on managed node
 - Create user and set password to `Cyberark1`
 ```console
@@ -72,6 +78,7 @@ conjur login -i admin -p CyberArk123!
 conjur variable set -i ssh_keys/username -v ansible
 conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa && echo "\n")"
 ```
+
 # 5. Prepare Ansible Controller
 - Configure ansible inventory
 - Set ControlPersist to 5s in Ansible configuration (for demo of SSH keys change, not recommended in deployment)
@@ -119,6 +126,7 @@ cat << EOF >> conjurdemo.yaml
   - ping:
 EOF
 ```
+
 # 6. Run playbook and demonstrate
 - Confirm that running ad-hoc command cannot reach the managed node
 ```console
@@ -138,6 +146,7 @@ foxtrot.vx | UNREACHABLE! => {
 ansible-playbook conjurdemo.yaml
 ```
 - Expected success:
+
 ```console
 [root@conjur ~]# ansible-playbook conjurdemo.yaml
 
