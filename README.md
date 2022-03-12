@@ -1,6 +1,7 @@
-# Introduction
+# Integrate Ansible Core with Conjur
+## Introduction
 - This guide demonstrates how Ansible Core can retrieve credentials from Conjur.
-- The integration between Ansible and Conjur is established using the Ansible role for Conjur: https://galaxy.ansible.com/cyberark/conjur.
+- The integration between Ansible and Conjur is established using the Ansible role for Conjur: <https://galaxy.ansible.com/cyberark/conjur>.
 - The demonstration will retrieve the credentials from Conjur to connect to the managed node and perform a simple `ping` task.
 ### Software Versions
 - RHEL 8.5
@@ -13,7 +14,7 @@
 | foxtrot.vx  | Ansible managed node  |
 
 # 1. Setup Conjur master
-- Setup Conjur master according to this guide: https://github.com/joetanx/conjur-master
+- Setup Conjur master according to this guide: <https://joetanx.github.io/conjur-master>
 # 2. Install Ansible control node
 ```console
 yum -y install python39-pip
@@ -51,7 +52,7 @@ cat /home/ansible/.ssh/id_rsa.pub > /home/ansible/.ssh/authorized_keys
 chmod 700 .ssh
 chmod 600 .ssh/authorized_keys
 ```
-- Setup Conjur CLI, ref: https://github.com/cyberark/conjur-api-python3/releases
+- Setup Conjur CLI, ref: <https://github.com/cyberark/conjur-api-python3/releases>
 ```console
 curl -L -o conjur-cli-rhel-8.tar.gz https://github.com/cyberark/conjur-api-python3/releases/download/v7.1.0/conjur-cli-rhel-8.tar.gz
 tar xvf conjur-cli-rhel-8.tar.gz
@@ -75,7 +76,7 @@ conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa &&
 - Configure ansible inventory
 - Set ControlPersist to 5s in Ansible configuration (for demo of SSH keys change, not recommended in deployment)
 - Install the `cyberark.conjur` module from Ansible Galaxy
-- The `cyberark.conjur` module enables variables retrieval from Conjur, ref: https://galaxy.ansible.com/cyberark/conjur
+- The `cyberark.conjur` module enables variables retrieval from Conjur, ref: <https://galaxy.ansible.com/cyberark/conjur>
 ```console
 mkdir /etc/ansible
 cat << EOF >> /etc/ansible/hosts
