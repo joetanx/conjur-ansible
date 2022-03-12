@@ -96,7 +96,6 @@ ssh_args = -o ControlMaster=auto -o ControlPersist=5s
 EOF
 ansible-galaxy collection install cyberark.conjur
 ```
-
 - Prepare Conjur configuration file on Ansible control node
 ```console
 openssl s_client -showcerts -connect conjur.vx:443 </dev/null 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /etc/conjur-certificate.pem
@@ -115,10 +114,8 @@ EOF
 NEWAPIKEY=$(conjur host rotate-api-key -i ansible/demo | grep 'New API key' | cut -d ' ' -f 5)
 sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ```
-
 - Prepare the demo Ansible playbook
-
-```console
+````console
 cat << EOF >> conjurdemo.yaml
 ---
 - hosts: conjurdemo
@@ -128,14 +125,13 @@ cat << EOF >> conjurdemo.yaml
   tasks:
   - ping:
 EOF
-```
+````
 
 # 6. Run playbook and demonstrate
 - Confirm that running ad-hoc command cannot reach the managed node
 ```console
 ansible conjurdemo -m ping
 ```
-
 -  Expect failure output:
 ```console
 [root@conjur ~]# ansible conjurdemo -m ping
@@ -145,15 +141,12 @@ foxtrot.vx | UNREACHABLE! => {
     "unreachable": true
 }
 ```
-
 - Run the demo playbook
 ```console
 ansible-playbook conjurdemo.yaml
 ```
-
 - Expected success:
-
-```console
+````console
 [root@conjur ~]# ansible-playbook conjurdemo.yaml
 
 PLAY [conjurdemo] **********************************************************************************************************************************************
@@ -166,4 +159,4 @@ ok: [foxtrot.vx]
 
 PLAY RECAP *****************************************************************************************************************************************************
 foxtrot.vx                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-```
+````
