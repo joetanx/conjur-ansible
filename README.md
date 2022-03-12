@@ -96,6 +96,7 @@ ssh_args = -o ControlMaster=auto -o ControlPersist=5s
 EOF
 ansible-galaxy collection install cyberark.conjur
 ```
+
 - Prepare Conjur configuration file on Ansible control node
 ```console
 openssl s_client -showcerts -connect conjur.vx:443 </dev/null 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /etc/conjur-certificate.pem
@@ -133,7 +134,8 @@ EOF
 ```console
 ansible conjurdemo -m ping
 ```
-- Expect failure output:
+
+-  Expect failure output:
 ```console
 [root@conjur ~]# ansible conjurdemo -m ping
 foxtrot.vx | UNREACHABLE! => {
@@ -142,6 +144,7 @@ foxtrot.vx | UNREACHABLE! => {
     "unreachable": true
 }
 ```
+
 - Run the demo playbook
 ```console
 ansible-playbook conjurdemo.yaml
