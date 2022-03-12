@@ -117,6 +117,7 @@ sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ```
 
 - Prepare the demo Ansible playbook
+
 ```console
 cat << EOF >> conjurdemo.yaml
 ---
@@ -151,6 +152,7 @@ ansible-playbook conjurdemo.yaml
 ```
 
 - Expected success:
+
 ```console
 [root@conjur ~]# ansible-playbook conjurdemo.yaml
 
