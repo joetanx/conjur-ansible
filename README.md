@@ -115,7 +115,8 @@ NEWAPIKEY=$(conjur host rotate-api-key -i ansible/demo | grep 'New API key' | cu
 sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ```
 - Prepare the demo Ansible playbook
-````console
+
+```console
 cat << EOF >> conjurdemo.yaml
 ---
 - hosts: conjurdemo
@@ -125,7 +126,7 @@ cat << EOF >> conjurdemo.yaml
   tasks:
   - ping:
 EOF
-````
+```
 
 # 6. Run playbook and demonstrate
 - Confirm that running ad-hoc command cannot reach the managed node
@@ -146,7 +147,8 @@ foxtrot.vx | UNREACHABLE! => {
 ansible-playbook conjurdemo.yaml
 ```
 - Expected success:
-````console
+
+```console
 [root@conjur ~]# ansible-playbook conjurdemo.yaml
 
 PLAY [conjurdemo] **********************************************************************************************************************************************
@@ -159,4 +161,4 @@ ok: [foxtrot.vx]
 
 PLAY RECAP *****************************************************************************************************************************************************
 foxtrot.vx                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-````
+```
