@@ -145,7 +145,7 @@ foxtrot.vx | UNREACHABLE! => {
 ```console
 ansible-playbook conjurdemo.yaml
 ```
-- Expected success:
+- Expected success: 
 ```console
 [root@conjur ~]# ansible-playbook conjurdemo.yaml
 
