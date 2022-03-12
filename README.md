@@ -114,6 +114,7 @@ EOF
 NEWAPIKEY=$(conjur host rotate-api-key -i ansible/demo | grep 'New API key' | cut -d ' ' -f 5)
 sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ```
+
 - Prepare the demo Ansible playbook
 ```console
 cat << EOF >> conjurdemo.yaml
@@ -145,7 +146,8 @@ foxtrot.vx | UNREACHABLE! => {
 ```console
 ansible-playbook conjurdemo.yaml
 ```
-- Expected success
+
+- Expected success:
 ```console
 [root@conjur ~]# ansible-playbook conjurdemo.yaml
 
