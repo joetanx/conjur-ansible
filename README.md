@@ -76,7 +76,7 @@ conjur login -i admin -p CyberArk123!
 - Set the Conjur variable value for username and SSH private key
 ```console
 conjur variable set -i ssh_keys/username -v ansible
-conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa && echo "\n")"
+conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa && echo -e "\n")"
 ```
 
 # 5. Prepare Ansible Controller
