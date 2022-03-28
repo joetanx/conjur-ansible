@@ -114,18 +114,10 @@ EOF
 NEWAPIKEY=$(conjur host rotate-api-key -i ansible/demo | grep 'New API key' | cut -d ' ' -f 5)
 sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ```
-- Prepare the demo Ansible playbook
 
+- Download the demo Ansible playbook
 ```console
-cat << EOF >> conjurdemo.yaml
----
-- hosts: conjurdemo
-  vars:
-    ansible_ssh_user: "{{ lookup('cyberark.conjur.conjur_variable', 'ssh_keys/username') }}"
-    ansible_ssh_private_key_file: "{{ lookup('cyberark.conjur.conjur_variable', 'ssh_keys/sshprvkey', as_file=True) }}"
-  tasks:
-  - ping:
-EOF
+curl -L -o conjurdemo.yaml https://github.com/joetanx/conjur-ansible/raw/main/conjurdemo.yaml
 ```
 
 # 6. Run playbook and demonstrate
