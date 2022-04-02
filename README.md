@@ -111,7 +111,7 @@ machine https://conjur.vx/authn
   login host/ansible/demo
   password <insert-new-api-key>
 EOF
-NEWAPIKEY=$(conjur host rotate-api-key -i ansible/demo | grep 'New API key' | cut -d ' ' -f 5)
+NEWAPIKEY=$(conjur host rotate-api-key -i ansible/demo | awk -F : '{print $2}')
 sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ```
 
