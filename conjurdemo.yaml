@@ -1,7 +1,0 @@
----
-- hosts: conjurdemo
-  vars:
-    ansible_ssh_user: "{{ lookup('cyberark.conjur.conjur_variable', 'ssh_keys/username') }}"
-    ansible_ssh_private_key_file: "{{ lookup('cyberark.conjur.conjur_variable', 'ssh_keys/sshprvkey', as_file=True) }}"
-  tasks:
-  - ping:
