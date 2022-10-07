@@ -5,9 +5,9 @@
 - The demonstration will retrieve the credentials from Conjur to connect to the managed node and perform a simple `ping` task.
 
 ### Software Versions
-- RHEL 8.5
-- Ansible Core 2.12
-- Conjur 12.4
+- RHEL 9.0
+- Ansible Core 2.13.4
+- Conjur 12.7
 
 ### Servers
 
@@ -21,8 +21,8 @@
 
 # 2. Install Ansible control node
 ```console
-yum -y install python39-pip
-pip3 install ansible
+yum -y install python-pip
+python -m pip install --user ansible
 ```
 
 # 3. Setup Conjur policy
@@ -34,7 +34,7 @@ pip3 install ansible
     - The Ansible control node will use the Conjur identity `host/ansible/demo` to retrieve credentials
     - Adds `ansible` layer to `consumers` group for `ssh_keys` policy
 ```console
-curl -L -o ansible-vars.yaml https://github.com/joetanx/conjur-ansible/raw/main/ansible-vars.yaml
+curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/ansible-vars.yaml
 conjur policy load -b root -f ansible-vars.yaml
 ```
 - Clean-up
@@ -60,7 +60,7 @@ chmod 600 .ssh/authorized_keys
 ```
 - Setup Conjur CLI, ref: <https://github.com/cyberark/conjur-api-python3/releases>
 ```console
-curl -L -o conjur-cli-rhel-8.tar.gz https://github.com/cyberark/conjur-api-python3/releases/download/v7.1.0/conjur-cli-rhel-8.tar.gz
+curl -L -O https://github.com/cyberark/cyberark-conjur-cli/releases/download/v7.1.0/conjur-cli-rhel-8.tar.gz
 tar xvf conjur-cli-rhel-8.tar.gz
 mv conjur /usr/local/bin/
 ```
@@ -76,7 +76,7 @@ conjur login -i admin -p CyberArk123!
 - Set the Conjur variable value for username and SSH private key
 ```console
 conjur variable set -i ssh_keys/username -v ansible
-conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa && echo -e "\n")"
+conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa && echo -e "\r")"
 ```
 
 # 5. Prepare Ansible Controller
@@ -117,7 +117,7 @@ sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 
 - Download the demo Ansible playbook
 ```console
-curl -L -o conjurdemo.yaml https://github.com/joetanx/conjur-ansible/raw/main/conjurdemo.yaml
+curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/conjurdemo.yaml
 ```
 
 # 6. Run playbook and demonstrate
