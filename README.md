@@ -119,10 +119,12 @@ sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 # 6. Run tasks to verify Ansible credential retrieval from Conjur
 ## 6.1. Confirm that running ad-hoc command cannot reach the managed node
 - Verify that there are no credentials on the Ansible controller by running an ad-hoc command
+
 ```console
 ansible conjurdemo -m ping
 ```
 -  Expected failure output:
+
 ```console
 [root@conjur ~]# ansible conjurdemo -m ping
 foxtrot.vx | UNREACHABLE! => {
@@ -135,11 +137,13 @@ foxtrot.vx | UNREACHABLE! => {
 ## 6.2. Verify that Ansible can retrieve credentials from Conjur
 - Download the helloworld Ansible playbook
 - The playbook performs lookups to Conjur to retrieve the username and ssh key, then runs a single ping task
+
 ```console
 curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/helloworld.yaml
 ```
 
 - Run the demo playbook
+
 ```console
 ansible-playbook helloworld.yaml
 ```
@@ -169,12 +173,14 @@ foxtrot.vx                 : ok=2    changed=0    unreachable=0    failed=0    s
   - Enable the httpd service to start on machine boot
   - Deploy the template `index.html.j2` as the index page
   - Restart the httpd services
+
 ```console
 curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/webserver.yaml
 curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/index.html.j2
 ```
 
 - Run the demo playbook
+
 ```console
 ansible-playbook webserver.yaml
 ```
