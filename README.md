@@ -145,6 +145,7 @@ ansible-playbook helloworld.yaml
 ```
 
 - Expected success:
+
 ```console
 [root@conjur ~]# ansible-playbook helloworld.yaml
 
@@ -179,6 +180,7 @@ ansible-playbook webserver.yaml
 ```
 
 - Expected result:
+
 ```console
 [root@conjur ~]# ansible-playbook webserver.yaml
 
