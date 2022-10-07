@@ -47,6 +47,7 @@ rm -f ansible-vars.yaml
 ```console
 useradd ansible
 echo -e "Cyberark1\nCyberark1" | (passwd ansible)
+echo 'ansible ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/ansible
 ```
 - su to the ansible user
 - Generate ssh key pair and set to `authorized_keys`
@@ -115,17 +116,13 @@ NEWAPIKEY=$(conjur host rotate-api-key -i ansible/demo | grep 'New API key' | cu
 sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ```
 
-- Download the demo Ansible playbook
-```console
-curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/conjurdemo.yaml
-```
-
-# 6. Run playbook and demonstrate
-- Confirm that running ad-hoc command cannot reach the managed node
+# 6. Run tasks to verify Ansible credential retrieval from Conjur
+## 6.1. Confirm that running ad-hoc command cannot reach the managed node
+- Verify that there are no credentials on the Ansible controller by running an ad-hoc command
 ```console
 ansible conjurdemo -m ping
 ```
--  Expect failure output:
+-  Expected failure output:
 ```console
 [root@conjur ~]# ansible conjurdemo -m ping
 foxtrot.vx | UNREACHABLE! => {
@@ -134,14 +131,20 @@ foxtrot.vx | UNREACHABLE! => {
     "unreachable": true
 }
 ```
+
+## 6.2. Verify that Ansible can retrieve credentials from Conjur
+- Download the helloworld Ansible playbook
+- The playbook performs lookups to Conjur to retrieve the username and ssh key, then runs a single ping task
+```console
+curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/helloworld.yaml
+```
 - Run the demo playbook
 ```console
-ansible-playbook conjurdemo.yaml
+ansible-playbook helloworld.yaml
 ```
 - Expected success:
-
 ```console
-[root@conjur ~]# ansible-playbook conjurdemo.yaml
+[root@conjur ~]# ansible-playbook helloworld.yaml
 
 PLAY [conjurdemo] **********************************************************************************************************************************************
 
@@ -154,3 +157,50 @@ ok: [foxtrot.vx]
 PLAY RECAP *****************************************************************************************************************************************************
 foxtrot.vx                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
+
+## 6.3. Run a more complex playbook to setup the managed node as a web server
+- Download the webserver Ansible playbook and the webpage template
+- The playbook performs lookups to Conjur to retrieve the username and ssh key, then runs the following tasks
+  - Install apache using yum
+  - Allow http service on firewalld
+  - Enable the httpd service to start on machine boot
+  - Deploy the template `index.html.j2` as the index page
+  - Restart the httpd services
+```console
+curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/webserver.yaml
+curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/index.html.j2
+```
+- Run the demo playbook
+```console
+ansible-playbook webserver.yaml
+```
+- Expected result:
+```console
+[root@conjur ~]# ansible-playbook webserver.yaml
+
+PLAY [conjurdemo] **********************************************************************************************************************************************
+
+TASK [Gathering Facts] *****************************************************************************************************************************************
+ok: [foxtrot.vx]
+
+TASK [yum] *****************************************************************************************************************************************************
+changed: [foxtrot.vx]
+
+TASK [firewalld] ***********************************************************************************************************************************************
+changed: [foxtrot.vx]
+
+TASK [systemd] *************************************************************************************************************************************************
+changed: [foxtrot.vx]
+
+TASK [template] ************************************************************************************************************************************************
+changed: [foxtrot.vx]
+
+RUNNING HANDLER [systemd] **************************************************************************************************************************************
+changed: [foxtrot.vx]
+
+PLAY RECAP *****************************************************************************************************************************************************
+foxtrot.vx                 : ok=6    changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+- Browse to the managed node to verify that web server deployment is successful
+
+![image](images/webpage.png)
