@@ -81,10 +81,11 @@ conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa &&
 ```
 
 # 5. Prepare Ansible Controller
-## 5.1. Configure ansible inventory
-- Set ControlPersist to 5s in Ansible configuration (for demo of SSH keys change, not recommended in deployment)
+## 5.1. Prepare Ansible configuration files
+- Configure the managed node `foxtrot.vx` under `conjurdemo` host group in Ansible inventory
+- Configure `ControlPersist` to 5s in Ansible configuration to facilitate demonstration of SSH keys change (not recommended in production deployments)
 - Install the `cyberark.conjur` module from Ansible Galaxy
-- The `cyberark.conjur` module enables variables retrieval from Conjur, ref: <https://galaxy.ansible.com/cyberark/conjur>
+- Install the `cyberark.conjur` module which enables variables retrieval from Conjur, ref: <https://galaxy.ansible.com/cyberark/conjur>
 ```console
 mkdir /etc/ansible
 cat << EOF >> /etc/ansible/hosts
