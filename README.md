@@ -101,7 +101,7 @@ ansible-galaxy collection install cyberark.conjur
 ## 5.2. Prepare Conjur configuration file on Ansible control node
 - The `cyberark.conjur` module uses an application identity (configured as `host/ansible/demo` in the policy loaded in [3. Setup Conjur Policy](#3-setup-conjur-policy)) to authenticate to conjur.
 - An application identity exists as a collection of information which can be stored in files or environment variables.
-- The commands below configures the `/etc/conjur-certificate.pem`, `/etc/conjur.conf` and `/etc/conjur.identity` files.
+- The following commands configure the `/etc/conjur-certificate.pem`, `/etc/conjur.conf` and `/etc/conjur.identity` files.
 - Ref:
   - <https://docs.cyberark.com/Product-Doc/OnlineHelp/AAM-DAP/12.7/en/Content/Get%20Started/key_concepts/machine_identity.html>
   - <https://cyberark-customers.force.com/s/article/Conjur-What-is-expected-in-the>
