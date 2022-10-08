@@ -81,7 +81,7 @@ conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa &&
 ```
 
 # 5. Prepare Ansible Controller
-- Configure ansible inventory
+## 5.1. Configure ansible inventory
 - Set ControlPersist to 5s in Ansible configuration (for demo of SSH keys change, not recommended in deployment)
 - Install the `cyberark.conjur` module from Ansible Galaxy
 - The `cyberark.conjur` module enables variables retrieval from Conjur, ref: <https://galaxy.ansible.com/cyberark/conjur>
@@ -97,7 +97,15 @@ ssh_args = -o ControlMaster=auto -o ControlPersist=5s
 EOF
 ansible-galaxy collection install cyberark.conjur
 ```
-- Prepare Conjur configuration file on Ansible control node
+
+## 5.2. Prepare Conjur configuration file on Ansible control node
+- The `cyberark.conjur` module uses an application identity (configured as `host/ansible/demo` in the policy loaded in [3. Setup Conjur Policy](#3-setup-conjur-policy)) to authenticate to conjur.
+- An application identity exists as a collection of information which can be stored in files or environment variables.
+- The commands below configures the `/etc/conjur-certificate.pem`, `/etc/conjur.conf` and `/etc/conjur.identity` files.
+- Ref:
+  - <https://docs.cyberark.com/Product-Doc/OnlineHelp/AAM-DAP/12.7/en/Content/Get%20Started/key_concepts/machine_identity.html>
+  - <https://cyberark-customers.force.com/s/article/Conjur-What-is-expected-in-the>
+
 ```console
 openssl s_client -showcerts -connect conjur.vx:443 </dev/null 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /etc/conjur-certificate.pem
 cat << EOF >> /etc/conjur.conf
@@ -115,6 +123,7 @@ EOF
 NEWAPIKEY=$(conjur host rotate-api-key -i ansible/demo | grep 'New API key' | cut -d ' ' -f 5)
 sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ```
+☝️ If you encounter the `The netrc file on the controlling host does not contain an entry for: https://<conjur_authn_url>` error, check that the application identity files are configured correctly.
 
 # 6. Run tasks to verify Ansible credential retrieval from Conjur
 ## 6.1. Confirm that running ad-hoc command cannot reach the managed node
