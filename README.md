@@ -33,6 +33,7 @@ python -m pip install --user ansible
   - Creates the policy `ansible` with a same-name layer and a host `demo`
     - The Ansible control node will use the Conjur identity `host/ansible/demo` to retrieve credentials
     - Adds `ansible` layer to `consumers` group for `ssh_keys` policy
+
 ```console
 curl -O https://raw.githubusercontent.com/joetanx/conjur-ansible/main/ansible-vars.yaml
 conjur policy load -b root -f ansible-vars.yaml
@@ -43,14 +44,18 @@ rm -f ansible-vars.yaml
 ```
 
 # 4. Prepare Ansible user on managed node
+
 - Create user and set password to `Cyberark1`
+
 ```console
 useradd ansible
 echo -e "Cyberark1\nCyberark1" | (passwd ansible)
 echo 'ansible ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/ansible
 ```
+
 - su to the ansible user
 - Generate ssh key pair and set to `authorized_keys`
+
 ```console
 su - ansible
 mkdir ~/.ssh
@@ -59,32 +64,43 @@ cat /home/ansible/.ssh/id_rsa.pub > /home/ansible/.ssh/authorized_keys
 chmod 700 .ssh
 chmod 600 .ssh/authorized_keys
 ```
+
 - Setup Conjur CLI, ref: <https://github.com/cyberark/conjur-api-python3/releases>
+
 ```console
 curl -L -O https://github.com/cyberark/cyberark-conjur-cli/releases/download/v7.1.0/conjur-cli-rhel-8.tar.gz
 tar xvf conjur-cli-rhel-8.tar.gz
 mv conjur /usr/local/bin/
 ```
+
 - Clean-up
+
 ```console
 rm -f conjur-cli-rhel-8.tar.gz
 ```
+
 -  Initialize Conjur CLI and login to conjur
+
 ```console
 conjur init -u https://conjur.vx
 conjur login -i admin -p CyberArk123!
 ```
+
 - Set the Conjur variable value for username and SSH private key
+
 ```console
 conjur variable set -i ssh_keys/username -v ansible
 conjur variable set -i ssh_keys/sshprvkey -v "$(cat /home/ansible/.ssh/id_rsa && echo -e "\r")"
 ```
 
 # 5. Prepare Ansible Controller
+
 ## 5.1. Prepare Ansible configuration files
+
 - Configure the managed node `foxtrot.vx` under `conjurdemo` host group in Ansible inventory
 - Configure `ControlPersist` to 5s in Ansible configuration to facilitate demonstration of SSH keys change (not recommended in production deployments)
 - Install the `cyberark.conjur` module which enables variables retrieval from Conjur, ref: <https://galaxy.ansible.com/cyberark/conjur>
+
 ```console
 mkdir /etc/ansible
 cat << EOF >> /etc/ansible/hosts
@@ -99,6 +115,7 @@ ansible-galaxy collection install cyberark.conjur
 ```
 
 ## 5.2. Prepare Conjur configuration file on Ansible control node
+
 - The `cyberark.conjur` module uses an application identity (configured as `host/ansible/demo` in the policy loaded in [3. Setup Conjur Policy](#3-setup-conjur-policy)) to authenticate to conjur.
 - An application identity exists as a collection of information which can be stored in files or environment variables.
 - The following commands configure the `/etc/conjur-certificate.pem`, `/etc/conjur.conf` and `/etc/conjur.identity` files.
@@ -126,12 +143,15 @@ sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/conjur.identity
 ☝️ If you encounter the `The netrc file on the controlling host does not contain an entry for: https://<conjur_authn_url>` error, check that the application identity files are configured correctly.
 
 # 6. Run tasks to verify Ansible credential retrieval from Conjur
+
 ## 6.1. Confirm that running ad-hoc command cannot reach the managed node
+
 - Verify that there are no credentials on the Ansible controller by running an ad-hoc command
 
 ```console
 ansible conjurdemo -m ping
 ```
+
 -  Expected failure output:
 
 ```console
@@ -144,6 +164,7 @@ foxtrot.vx | UNREACHABLE! => {
 ```
 
 ## 6.2. Verify that Ansible can retrieve credentials from Conjur
+
 - Download the helloworld Ansible playbook
 - The playbook performs lookups to Conjur to retrieve the username and ssh key, then runs a single ping task
 
@@ -175,6 +196,7 @@ foxtrot.vx                 : ok=2    changed=0    unreachable=0    failed=0    s
 ```
 
 ## 6.3. Run a more complex playbook to setup the managed node as a web server
+
 - Download the webserver Ansible playbook and the webpage template
 - The playbook performs lookups to Conjur to retrieve the username and ssh key, then runs the following tasks
   - Install apache using yum
