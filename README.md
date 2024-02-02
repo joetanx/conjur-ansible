@@ -17,7 +17,7 @@
 | foxtrot.vx  | Ansible managed node  |
 
 # 1. Setup Conjur master
-- Setup Conjur master according to this guide: <https://github.com/joetanx/conjur-master>
+- Setup Conjur master according to this guide: <https://github.com/joetanx/setup/blob/main/conjur.md>
 
 # 2. Install Ansible control node
 ```console
